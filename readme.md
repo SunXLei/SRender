@@ -6,17 +6,15 @@ The purpose of writing this renderer is mainly for better understanding basic CG
 
 ### Image-based lighting
 
-<img src="obj/gun/gun.png" width="410" align='left'>
+<img src="obj/gun/gun.png" width="410">
 
-<img src="obj/helmet/helmet.png" width="410" align='left'>
+<img src="obj/helmet/helmet.png" width="410">
 
 ### Blinn-Phong Shading
 
-<img src="obj/qiyana/qiyana.png" width="410" align='left'>
+<img src="obj/qiyana/qiyana.png" width="410">
 
-
-
-<img src="obj/yayi/yayi.png" width="410" align='left'>
+<img src="obj/yayi/yayi.png" width="410" >
 
 ## Main Features
 

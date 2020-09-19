@@ -1,0 +1,24 @@
+newmtl m0
+map_Kd 1.png
+Ka 0.6 0.6 0.6
+Kd 0.8 0.8 0.8
+Ks 0 0 0
+Ns 5
+d 1
+
+newmtl m1
+map_Kd 1.png
+Ka 0.6 0.6 0.6
+Kd 0.8 0.8 0.8
+Ks 0 0 0
+Ns 5
+d 1
+
+newmtl m2
+map_Kd 1.png
+Ka 0.6 0.6 0.6
+Kd 0.8 0.8 0.8
+Ks 0 0 0
+Ns 5
+d 1
+

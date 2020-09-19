@@ -30,7 +30,7 @@ The purpose of writing this renderer is mainly for better understanding basic CG
 
 ## Binaries for Usage
 
-The pre-built binaries can be found in binary_exe_file. You can start with binaries and obj assets. (Note: the obj document should in the parent directory of binaries)
+The pre-built binaries can be found in binary_exe_file document. You can start with binaries and obj assets. (Note: the obj document should be placed in the parent directory of binaries)
 
 The obj models are a little bit big, it can also be downloaded from here:
 
@@ -53,7 +53,7 @@ start Renderer.sln
 
 
 
-You can also directly open the SRender file with [CLION](https://www.jetbrains.com/clion/), it will automatically configure the project.
+Another way is directly opening the SRender file with [CLION](https://www.jetbrains.com/clion/), it will automatically configure the project.
 
 
 
@@ -67,5 +67,5 @@ You can also directly open the SRender file with [CLION](https://www.jetbrains.c
 
 zauonlok's implementation of [software renderer](https://github.com/zauonlok/renderer).
 
-...
+wait for updating...
 

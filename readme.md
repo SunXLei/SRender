@@ -2,7 +2,7 @@
 
 SRender is a software renderer written from scratch in C++11 with no dependencies (except win32 for display image) for windows platform. The purpose of writing this renderer is mainly for better understanding basic CG knowledge and algorithms. 
 
-The number of core codes is about 2000, so it's easy for studying or reading. You can feel free to make changes on this project.  Here some screenshots of SRender:
+The number of core codes is about 2000 lines, so it's easy for studying or reading. You can feel free to make changes on this project.  Here some screenshots of SRender:
 
 ### Image-based lighting
 

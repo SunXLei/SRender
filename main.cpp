@@ -20,6 +20,16 @@ mat4 model_mat;
 mat4 view;
 mat4 perspective;
 
+static scene_t scenes[]
+{
+	{"fuhua",build_fuhua_scene},
+	{"qiyana",build_qiyana_scene},
+	{"yayi",build_yayi_scene},
+	{"xier",build_xier_scene},
+	{"helmet",build_helmet_scene},
+	{"gun",build_gun_scene},
+};
+
 void clear_zbuffer(int width, int height, float* zbuffer)
 {
 	for (int i = 0; i < width*height; i++)
@@ -59,15 +69,6 @@ void update_matrix_data(Camera &camera, mat4 perspective, IShader *shader_model,
 	}
 }
 
-static scene_t scenes[]
-{
-	{"fuhua",build_fuhua_scene},
-	{"qiyana",build_qiyana_scene},
-	{"yayi",build_yayi_scene},
-	{"xier",build_xier_scene},
-	{"helmet",build_helmet_scene},
-	{"gun",build_gun_scene},
-};
 
 int main()
 {
@@ -99,6 +100,7 @@ int main()
 	int i = rand() % 6;
 	scenes[i].build_scene(model, model_num, &shader_model,&shader_skybox,perspective,&camera);
 
+	//start to render
 	int num_frames = 0;
 	window_init(width, height, "SRender");
 	float print_time = platform_get_time();

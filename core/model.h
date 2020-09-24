@@ -13,16 +13,10 @@ private:
 	std::vector<std::vector<int> > faces_; // attention, this Vec3i means vertex/uv/normal
 	std::vector<vec3> norms_;
 	std::vector<vec2> uv_;
-	TGAImage diffusemap_;
-	TGAImage normalmap_;
-	TGAImage specularmap_;
-	TGAImage roughnessmap_;
-	TGAImage metalnessmap_;
-	TGAImage occlusion_map;
-	TGAImage emision_map;
-	
+
 
 	void load_cubemap(const char *filename);
+	void create_map(const char *filename);
 	void load_texture(std::string filename, const char *suffix, TGAImage &img);
 	void load_texture(std::string filename, const char *suffix, TGAImage *img);
 public:
@@ -31,7 +25,16 @@ public:
 	//skybox
 	cubemap_t *environment_map;
 	int is_skybox;
+
+	//map
 	int is_from_mmd;
+	TGAImage *diffusemap_;
+	TGAImage *normalmap_;
+	TGAImage *specularmap_;
+	TGAImage *roughnessmap_;
+	TGAImage *metalnessmap_;
+	TGAImage *occlusion_map;
+	TGAImage *emision_map;
 
 	int nverts();
 	int nfaces();

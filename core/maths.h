@@ -72,6 +72,7 @@ public:
 	float e[4];
 };
 
+
 /* mat3 class */
 class mat3 {
 public:
@@ -162,5 +163,6 @@ float float_lerp(float start, float end, float alpha);
 vec2 vec2_lerp(vec2& start, vec2& end, float alpha);
 vec3 vec3_lerp(vec3& start, vec3& end, float alpha);
 vec4 vec4_lerp(vec4& start, vec4& end, float alpha);
+
 
 #endif

@@ -77,6 +77,37 @@ static vec3 Reinhard_mapping(vec3& color)
 	return color;
 }
 
+static vec3 cal_normal(vec3 &normal, vec3 *world_coords, const vec2 *uvs, const vec2 &uv, TGAImage *normal_map)
+{
+	//calculate the difference in UV coordinate
+	float x1 = uvs[1][0] - uvs[0][0];
+	float y1 = uvs[1][1] - uvs[0][1];
+	float x2 = uvs[2][0] - uvs[0][0];
+	float y2 = uvs[2][1] - uvs[0][1];
+	float det = (x1 * y2 - x2 * y1);
+
+	//calculate the difference in world pos
+	vec3 e1 = world_coords[1] - world_coords[0];
+	vec3 e2 = world_coords[2] - world_coords[0];
+
+	//calculate tangent-axis and bitangent-axis
+	vec3 t = e1 * y2 + e2 * (-y1);
+	vec3 b = e1 * (-x2) + e2 * x1;
+	t /= det;
+	b /= det;
+
+	//Schmidt orthogonalization
+	normal = unit_vector(normal);
+	t = unit_vector(t - dot(t, normal)*normal);
+	b = unit_vector(b - dot(b, normal)*normal - dot(b, t)*t);
+
+	vec3 sample = texture_sample(uv, normal_map);
+	//modify the range 0 ~ 1 to -1 ~ +1
+	sample = vec3(sample[0] * 2 - 1, sample[1] * 2 - 1, sample[2] * 2 - 1);
+
+	vec3 normal_new = t * sample[0] + b * sample[1] + normal * sample[2];
+	return normal_new;
+}
 
 void PBRShader::vertex_shader(int nfaces, int nvertex)
 {
@@ -99,6 +130,7 @@ void PBRShader::vertex_shader(int nfaces, int nvertex)
 	}
 }
 
+//暂时搁置，未设置光源
 vec3 PBRShader::direct_fragment_shader(float alpha, float beta, float gamma)
 {
 	vec3 CookTorrance_brdf;
@@ -170,7 +202,7 @@ vec3 PBRShader::direct_fragment_shader(float alpha, float beta, float gamma)
 	return color * 255.f;
 }
 
-//ibl_fragment_shader, 先反着测一下
+//ibl_fragment_shader
 vec3 PBRShader::fragment_shader(float alpha, float beta, float gamma)
 {
 	vec3 CookTorrance_brdf;
@@ -192,53 +224,57 @@ vec3 PBRShader::fragment_shader(float alpha, float beta, float gamma)
 	vec3 worldpos = (alpha*world_coords[0] / clip_coords[0].w() + beta * world_coords[1] / clip_coords[1].w() +
 		gamma * world_coords[2] / clip_coords[2].w()) * Z;
 
+
+	if (payload.model->normalmap_)
+	{
+		normal = cal_normal(normal, world_coords, uvs, uv, payload.model->normalmap_);
+	}
+
+
 	vec3 n = unit_vector(normal);
 	vec3 v = unit_vector(payload.camera->eye - worldpos);
-	//std::cout << v << std::endl;
 	float n_dot_v = float_max(dot(n, v), 0);
 
-	float roughness = payload.model->roughness(uv);
-	float metalness = payload.model->metalness(uv);
-	float occlusion = payload.model->occlusion(uv);
-	vec3 emission = payload.model->emission(uv);
-	//if(emission[0] > 0)
-	//	std::cout << emission << std::endl;
-	//roughness = 0;
-	//metalness = 1;
+	vec3 color(0.0f, 0.0f, 0.0f);
+	if (n_dot_v > 0)
+	{
+		float roughness = payload.model->roughness(uv);
+		float metalness = payload.model->metalness(uv);
+		float occlusion = payload.model->occlusion(uv);
+		vec3 emission = payload.model->emission(uv);
 
-	//get albedo
-	vec3 albedo = payload.model->diffuse(uv);
-	vec3 temp = vec3(0.04, 0.04, 0.04);
-	vec3 temp2 = vec3(1.0f, 1.0f, 1.0f);
-	vec3 f0 = vec3_lerp(temp, albedo, metalness);
+		//get albedo
+		vec3 albedo = payload.model->diffuse(uv);
+		vec3 temp = vec3(0.04, 0.04, 0.04);
+		vec3 temp2 = vec3(1.0f, 1.0f, 1.0f);
+		vec3 f0 = vec3_lerp(temp, albedo, metalness);
 
-	vec3 F = fresenlschlick_roughness(n_dot_v, f0,roughness);
-	vec3 kD = (vec3(1.0, 1.0, 1.0) - F)*(1 - metalness);
+		vec3 F = fresenlschlick_roughness(n_dot_v, f0, roughness);
+		vec3 kD = (vec3(1.0, 1.0, 1.0) - F)*(1 - metalness);
 
-	//diffuse color
-	cubemap_t *irradiance_map = payload.iblmap->irradiance_map;
-	vec3 irradiance = cubemap_sampling(n, irradiance_map);
-	for (int i = 0; i < 3; i++)
-		irradiance[i] = pow(irradiance[i], 2.0f);
-	vec3 diffuse = irradiance * kD * albedo;
+		//diffuse color
+		cubemap_t *irradiance_map = payload.iblmap->irradiance_map;
+		vec3 irradiance = cubemap_sampling(n, irradiance_map);
+		for (int i = 0; i < 3; i++)
+			irradiance[i] = pow(irradiance[i], 2.0f);
+		vec3 diffuse = irradiance * kD * albedo;
 
-	//specular color
-	vec3 r = unit_vector(2.0*dot(v, n) * n - v);
-	//std::cout << r << std::endl;
-	vec2 lut_uv = vec2(n_dot_v, roughness);
-	vec3 lut_sample = texture_sample(lut_uv,payload.iblmap->brdf_lut);
-	float specular_scale = lut_sample.x();
-	float specular_bias = lut_sample.y();
-	vec3 specular = f0 * specular_scale + vec3(specular_bias, specular_bias, specular_bias);
-	float max_mip_level = (float)(payload.iblmap->mip_levels - 1);
-	int specular_miplevel = (int)(roughness * max_mip_level + 0.5f);
-	vec3 prefilter_color = cubemap_sampling(r, payload.iblmap->prefilter_maps[specular_miplevel]);
-	for (int i = 0; i < 3; i++)
-		prefilter_color[i] = pow(prefilter_color[i], 2.0f);
-	specular = cwise_product(prefilter_color,specular);
+		//specular color
+		vec3 r = unit_vector(2.0*dot(v, n) * n - v);
+		vec2 lut_uv = vec2(n_dot_v, roughness);
+		vec3 lut_sample = texture_sample(lut_uv, payload.iblmap->brdf_lut);
+		float specular_scale = lut_sample.x();
+		float specular_bias = lut_sample.y();
+		vec3 specular = f0 * specular_scale + vec3(specular_bias, specular_bias, specular_bias);
+		float max_mip_level = (float)(payload.iblmap->mip_levels - 1);
+		int specular_miplevel = (int)(roughness * max_mip_level + 0.5f);
+		vec3 prefilter_color = cubemap_sampling(r, payload.iblmap->prefilter_maps[specular_miplevel]);
+		for (int i = 0; i < 3; i++)
+			prefilter_color[i] = pow(prefilter_color[i], 2.0f);
+		specular = cwise_product(prefilter_color, specular);
 
-	vec3 color = (diffuse + specular)  + emission;
-
+		color = (diffuse + specular) + emission;
+	}
 
 	Reinhard_mapping(color);
 	return color * 255.f; 

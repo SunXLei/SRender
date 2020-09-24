@@ -85,6 +85,12 @@ vec3 cubemap_sampling(vec3 direction, cubemap_t *cubemap)
 	int face_index = cal_cubemap_uv(direction, uv);
 	color = texture_sample(uv, cubemap->faces[face_index]);
 
+	//if (fabs(color[0]) < 1e-6&&fabs(color[2]) < 1e-6&&fabs(color[1]) < 1e-6)
+	//{
+
+	//	printf("here %d  direction:%f %f %f\n",face_index,direction[0],direction[1],direction[2]);
+	//}
+
 	return color;
 }
 

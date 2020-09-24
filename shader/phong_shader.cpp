@@ -1,4 +1,36 @@
 #include "./shader.h"
+#include "../core/sample.h"
+
+static vec3 cal_normal(vec3 &normal, vec3 *world_coords,const vec2 *uvs,const vec2 &uv, TGAImage *normal_map)
+{
+	//calculate the difference in UV coordinate
+	float x1 = uvs[1][0] - uvs[0][0];
+	float y1 = uvs[1][1] - uvs[0][1];
+	float x2 = uvs[2][0] - uvs[0][0];
+	float y2 = uvs[2][1] - uvs[0][1];
+	float det = (x1 * y2 - x2 * y1);
+
+	//calculate the difference in world pos
+	vec3 e1 = world_coords[1] - world_coords[0];
+	vec3 e2 = world_coords[2] - world_coords[0];
+
+	vec3 t = e1 * y2 + e2 * (-y1);
+	vec3 b = e1 * (-x2) + e2 * x1;
+	t /= det;
+	b /= det;
+
+	//Schmidt orthogonalization
+	normal = unit_vector(normal);
+	t = unit_vector(t - dot(t, normal)*normal);
+	b = unit_vector(b - dot(b, normal)*normal - dot(b, t)*t);
+
+	vec3 sample = texture_sample(uv, normal_map);
+	//modify the range 0 ~ 1 to -1 ~ +1
+	sample = vec3(sample[0] * 2 - 1, sample[1] * 2 - 1, sample[2] * 2 - 1);
+
+	vec3 normal_new = t * sample[0] + b * sample[1] + normal * sample[2];
+	return normal_new;
+}
 
 void PhongShader::vertex_shader(int nfaces, int nvertex)
 {
@@ -23,6 +55,7 @@ void PhongShader::vertex_shader(int nfaces, int nvertex)
 
 vec3 PhongShader::fragment_shader(float alpha, float beta, float gamma)
 {
+
 	//set light information
 	float p = 150.0;
 	vec3 amb_light_intensity(5, 5, 5);
@@ -44,6 +77,14 @@ vec3 PhongShader::fragment_shader(float alpha, float beta, float gamma)
 		gamma * uvs[2] / clip_coords[2].w()) * Z;
 	vec3 worldpos = (alpha*world_coords[0] / clip_coords[0].w() + beta * world_coords[1] / clip_coords[1].w() +
 		gamma * world_coords[2] / clip_coords[2].w()) * Z;
+
+
+
+	if (payload.model->normalmap_)
+	{
+		//printf("here\n");
+		normal = cal_normal(normal, world_coords, uvs, uv, payload.model->normalmap_);
+	}
 
 	//get ka,ks,kd
 	vec3 ka(0.0005, 0.0005, 0.0005);
@@ -70,6 +111,7 @@ vec3 PhongShader::fragment_shader(float alpha, float beta, float gamma)
 		specular = cwise_product(ks, light.intensity) * float_max(0, pow(dot(normal, h), p)) / r;
 
 		result_color += (0.9*kd + diffuse * 0.2);
+		//result_color += diffuse;
 	}
 	return result_color * 255.f;
 }

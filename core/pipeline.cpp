@@ -356,9 +356,9 @@ void rasterize_singlethread(vec4 *clipcoord_attri, unsigned char* framebuffer, f
 			flag = 1;
 		}
 
-		ndc_pos[i][0] = clipcoord_attri[i][0] /= clipcoord_attri[i].w();
-		ndc_pos[i][1] = clipcoord_attri[i][1] /= clipcoord_attri[i].w();
-		ndc_pos[i][2] = clipcoord_attri[i][2] /= clipcoord_attri[i].w();
+		ndc_pos[i][0] = clipcoord_attri[i][0] / clipcoord_attri[i].w();
+		ndc_pos[i][1] = clipcoord_attri[i][1] / clipcoord_attri[i].w();
+		ndc_pos[i][2] = clipcoord_attri[i][2] / clipcoord_attri[i].w();
 	}
 
 	//viewport transform

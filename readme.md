@@ -1,6 +1,6 @@
 #  SRender
 
-SRender is a software renderer written from scratch in C++11 with no dependencies (except win32 for display image) for windows platform. The purpose of writing this renderer is mainly for better understanding basic CG knowledge and algorithms. 
+SRender is a software rasterization application written from scratch in C++11 with minimal dependencies (except win32 for display image) for windows platform. The purpose of writing this renderer is mainly for better understanding basic CG knowledge and algorithms. 
 
 The number of core codes is about 2000 lines, so it's easy for studying or reading. You can feel free to make changes on this project.  Here some screenshots of SRender:
 
@@ -30,7 +30,7 @@ The number of core codes is about 2000 lines, so it's easy for studying or readi
 
 ## Binaries for Usage
 
-The pre-built binaries can be found in binary_exe_file document. You can start with binaries and obj assets. (Note: the obj document should be placed in the parent directory of binaries)
+The pre-built binaries can be found in bin folder. You can start with binaries and obj assets. (Note: the obj folder should be placed in the parent directory of binaries)
 
 The obj models are a little bit big, it can also be downloaded from here:
 
@@ -48,7 +48,6 @@ For visual studio:
 mkdir build
 cd build
 cmake -G "Visual Studio 15 2017" ..
-start Renderer.sln
 ```
 
 
@@ -67,5 +66,7 @@ Another way is directly opening the SRender file with [CLION](https://www.jetbra
 
 zauonlok's implementation of [software renderer](https://github.com/zauonlok/renderer).
 
-wait for updating...
+[GAMES101](http://games-cn.org/intro-graphics/).
+
+
 

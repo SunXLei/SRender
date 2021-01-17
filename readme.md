@@ -6,15 +6,15 @@ The number of core codes is about 2000 lines, so it's easy for studying or readi
 
 ### Image-based lighting
 
-<img src="obj/gun/gun.png" width="410">
+<img src="image/gun/gun.png" width="410">
 
-<img src="obj/helmet/helmet.png" width="410">
+<img src="image/helmet/helmet.png" width="410">
 
 ### Blinn-Phong Shading
 
-<img src="obj/qiyana/qiyana.png" width="410">
+<img src="image/qiyana/qiyana.png" width="410">
 
-<img src="obj/yayi/yayi.png" width="410" >
+<img src="image/yayi/yayi.png" width="410" >
 
 ## Main Features
 
@@ -32,7 +32,7 @@ The number of core codes is about 2000 lines, so it's easy for studying or readi
 
 The pre-built binaries can be found in bin folder. You can start with binaries and obj assets. (Note: the obj folder should be placed in the parent directory of binaries)
 
-The obj models are a little bit big, it can also be downloaded from here:
+The obj models folder be downloaded from here:
 
 https://pan.baidu.com/s/1_EgKzcFXJLCuDi1o5fhQww
 

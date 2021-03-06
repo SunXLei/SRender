@@ -2,7 +2,8 @@
 #include "./tgaimage.h"
 #include "../shader/shader.h"
 
-typedef struct {
+typedef struct 
+{
 	const char *scene_name;
 	void (*build_scene)(Model **model, int &m, IShader **shader_use, IShader **shader_skybox, mat4 perspective, Camera *camera);
 } scene_t;

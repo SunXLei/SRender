@@ -1,11 +1,9 @@
-#ifndef _MATHS_H_
-#define _MATHS_H_
-
-#define PI 3.1415926
-#include <iostream>
+#pragma once
 #include <cmath>
+#include <iostream>
 
-/* vec2 class */
+#include "./macro.h"
+
 class vec2 {
 public:
 	vec2();
@@ -28,7 +26,6 @@ public:
 	float e[2];
 };
 
-/* vec3 class */
 class vec3 {
 public:
 	vec3();
@@ -52,7 +49,6 @@ public:
 	float e[3];
 };
 
-/* vec4 class */
 class vec4 {
 public:
 	vec4();
@@ -72,8 +68,6 @@ public:
 	float e[4];
 };
 
-
-/* mat3 class */
 class mat3 {
 public:
 	mat3();
@@ -90,7 +84,6 @@ public:
 	vec3 rows[3];
 };
 
-/* mat4 class */
 class mat4 {
 public:
 	mat4();
@@ -137,10 +130,8 @@ vec4 operator+(const vec4 &u, const vec4 &v);
 vec4 operator*(double t, const vec4 &v);
 vec4 operator*(const vec4 &v, double t);
 
-/* mat3 related functions */
+/* mat related functions */
 std::ostream& operator<<(std::ostream &out, const mat3 &m);
-
-/* mat4 related functions */
 std::ostream& operator<<(std::ostream &out, const mat4 &m);
 vec4 operator*(const mat4 &m, const vec4 v);
 mat4 operator*(const mat4 &m1, const mat4 &m2);
@@ -163,6 +154,3 @@ float float_lerp(float start, float end, float alpha);
 vec2 vec2_lerp(vec2& start, vec2& end, float alpha);
 vec3 vec3_lerp(vec3& start, vec3& end, float alpha);
 vec4 vec4_lerp(vec4& start, vec4& end, float alpha);
-
-
-#endif

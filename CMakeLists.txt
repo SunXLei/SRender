@@ -13,6 +13,7 @@ else()
 endif()
 
 set(HEADERS
+        core/macro.h
         core/camera.h
         core/maths.h
         core/model.h
@@ -22,7 +23,7 @@ set(HEADERS
         core/spainlock.hpp
         core/tgaimage.h
         shader/shader.h
-        win32/win32.h
+        platform/win32.h
         )
 
 set(SOURCES
@@ -36,8 +37,8 @@ set(SOURCES
         shader/pbr_shader.cpp
         shader/phong_shader.cpp
         shader/skybox_shader.cpp
-        win32/win32.cpp
-		main.cpp
+        platform/win32.cpp
+        main.cpp
         )
 
 add_executable(SRender  ${HEADERS} ${SOURCES})

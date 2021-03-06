@@ -1,11 +1,11 @@
-#include "win32.h"
-#include <assert.h>
-#include <stdio.h>
+#include "./win32.h"
+
+#include <cassert>
+#include <cstdio>
 
 window_t* window = NULL;
 
-static LRESULT CALLBACK msg_callback(HWND hWnd, UINT msg,
-	WPARAM wParam, LPARAM lParam) 
+static LRESULT CALLBACK msg_callback(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 {
 	switch (msg) 
 	{
@@ -59,7 +59,7 @@ static void register_window_class()
 	//初始化结构体
 	WNDCLASS wc;
 	wc.style = CS_BYTEALIGNCLIENT;							//窗口风格
-	wc.lpfnWndProc = (WNDPROC)msg_callback;				//回调函数
+	wc.lpfnWndProc = (WNDPROC)msg_callback;					//回调函数
 	wc.cbClsExtra = 0;										//紧跟在窗口类尾部的一块额外空间，不用则设为0
 	wc.cbWndExtra = 0;										//紧跟在窗口实例尾部的一块额外空间，不用则设为0
 	wc.hInstance = GetModuleHandle(NULL);					//当前实例句柄
@@ -84,7 +84,8 @@ static void register_window_class()
 		LONG       biXPelsPerMeter;
 		LONG       biYPelsPerMeter;
 		DWORD      biClrUsed;
-		DWORD      biClrImportant;*/
+		DWORD      biClrImportant;
+*/
 static void init_bm_header(BITMAPINFOHEADER &bi,int width,int height)
 {
 	memset(&bi, 0, sizeof(BITMAPINFOHEADER));
@@ -97,18 +98,16 @@ static void init_bm_header(BITMAPINFOHEADER &bi,int width,int height)
 	bi.biSizeImage = width * height * 4;
 }
 
-
-// 初始化窗口并设置标题
 int window_init(int width, int height, const char *title) 
 {
 	window = (window_t*)malloc(sizeof(window_t));
 	memset(window, 0, sizeof(window_t));
 	window->is_close = 0;
 
-	RECT rect = { 0, 0, width, height };//一个矩形范围 左上右下
+	RECT rect = { 0, 0, width, height }; //一个矩形范围 左上右下
 	int wx, wy, sx, sy;
 	LPVOID ptr; //就是void *
-	HDC hDC;   //设备环境，h代表句柄，handle
+	HDC hDC;    //设备环境，h代表句柄，handle
 	BITMAPINFOHEADER bi;
 
 	//注册窗口类
@@ -143,20 +142,18 @@ int window_init(int width, int height, const char *title)
 	wx = rect.right - rect.left;
 	wy = rect.bottom - rect.top;
 	sx = (GetSystemMetrics(SM_CXSCREEN) - wx) / 2; // GetSystemMetrics(SM_CXSCREEN)获取你屏幕的分片率
-	sy = (GetSystemMetrics(SM_CYSCREEN) - wy) / 2; //我的是1920*1080， 这里是为了算出中心位置
-	//printf("%d %d %d\n", sx, GetSystemMetrics(SM_CXSCREEN), wx);
-	//printf("%d %d %d\n", sy, GetSystemMetrics(SM_CYSCREEN), wy);
+	sy = (GetSystemMetrics(SM_CYSCREEN) - wy) / 2; // 计算出中心位置
 	if (sy < 0) sy = 0;
 
 	SetWindowPos(window->h_window, NULL, sx, sy, wx, wy, (SWP_NOCOPYBITS | SWP_NOZORDER | SWP_SHOWWINDOW));
 	SetForegroundWindow(window->h_window);
 	ShowWindow(window->h_window, SW_NORMAL);
 
-	//消息循环
+	//消息分派
 	msg_dispatch();
 
 	//初始化keys, window_fb全为0
-	memset(window->window_fb, 0, (width) * height * 4);
+	memset(window->window_fb, 0, width * height * 4);
 	memset(window->keys, 0, sizeof(char) * 512);
 	return 0;
 }
@@ -167,7 +164,7 @@ int window_destroy()
 	{
 		if (window->bm_old)
 		{
-			SelectObject(window->mem_dc, window->bm_old);//写入原来的bitmap，才能释放DC！
+			SelectObject(window->mem_dc, window->bm_old); // 写入原来的bitmap，才能释放DC！
 			window->bm_old = NULL;
 		}
 		DeleteDC(window->mem_dc);
@@ -184,7 +181,6 @@ int window_destroy()
 		window->h_window = NULL;
 	}
 
-
 	free(window);
 	return 0;
 }
@@ -196,7 +192,7 @@ void msg_dispatch()
 	MSG msg;
 	while (1) 
 	{
-		//Peek不阻塞，Get会阻塞，PM_NOREMOVE表示如果有消息不处理（留给接下来的Get处理）
+		// Peek不阻塞，Get会阻塞，PM_NOREMOVE表示如果有消息不处理（留给接下来的Get处理）
 		if (!PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) break; //没消息就溜，确定有消息再用Get
 		if (!GetMessage(&msg, NULL, 0, 0)) break;
 
@@ -207,22 +203,24 @@ void msg_dispatch()
 
 static void window_display() 
 {
-	LOGFONT logfont; //改变输出bai字体du
+	LOGFONT logfont; //改变输出字体
 	ZeroMemory(&logfont, sizeof(LOGFONT));
 	logfont.lfCharSet = ANSI_CHARSET;
-	logfont.lfHeight = 30; //设置字体的大小
+	logfont.lfHeight = 20; //设置字体的大小
 	HFONT hFont = CreateFontIndirect(&logfont);
 
 	HDC hDC = GetDC(window->h_window);
 	//目标举行的左上角(x,y), 宽度，高度，上下文指针
 	SelectObject(window->mem_dc, hFont);
-	SetTextColor(window->mem_dc, RGB(255, 255, 255));
+	SetTextColor(window->mem_dc, RGB(190, 190, 190));
 	SetBkColor(window->mem_dc, RGB(80, 80, 80));
 	//TextOut(window->mem_dc, 300, 50, "Project Name:SRender", strlen("Project Name:SRender"));
 	//TextOut(window->mem_dc, 300, 80, "Author:Lei", strlen("Author:Lei Sun"));
 	TextOut(window->mem_dc, 20, 20, 
-		"Control:hold left buttion to rotate, right button to pan", 
+		"control:hold left buttion to rotate, right button to pan", 
 		strlen("Control:hold left buttion to rotate, right button to pan"));
+
+	// 把兼容性DC的数据传到真正的DC上
 	BitBlt(hDC, 0, 0, window->width, window->height, window->mem_dc, 0, 0, SRCCOPY);
 	ReleaseDC(window->h_window, hDC);
 	
@@ -236,25 +234,23 @@ void window_draw(unsigned char *framebuffer)
 		for (int j = 0; j < window->width; j++)
 		{
 			int index = (i * window->width + j) * 4;
-			window->window_fb[index] = framebuffer[index + 2];
+			window->window_fb[index]	 = framebuffer[index + 2];
 			window->window_fb[index + 1] = framebuffer[index + 1];
 			window->window_fb[index + 2] = framebuffer[index];
 		}
 	}
 	window_display();
-
 }
 
 vec2 get_mouse_pos()
 {
 	POINT point;
 	GetCursorPos(&point);
-	ScreenToClient(window->h_window, &point);
+	ScreenToClient(window->h_window, &point); // 从屏幕空间转到窗口空间
 	return vec2((float)point.x, (float)point.y);
 }
 
 /* misc platform functions */
-
 static double get_native_time(void) {
 	static double period = -1;
 	LARGE_INTEGER counter;

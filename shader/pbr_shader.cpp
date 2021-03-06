@@ -225,9 +225,9 @@ vec3 PBRShader::fragment_shader(float alpha, float beta, float gamma)
 		gamma * world_coords[2] / clip_coords[2].w()) * Z;
 
 
-	if (payload.model->normalmap_)
+	if (payload.model->normalmap)
 	{
-		normal = cal_normal(normal, world_coords, uvs, uv, payload.model->normalmap_);
+		normal = cal_normal(normal, world_coords, uvs, uv, payload.model->normalmap);
 	}
 
 

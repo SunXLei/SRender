@@ -1,13 +1,9 @@
 #pragma once
-#include "maths.h"
-#include "../shader/shader.h"
-#include "../win32/win32.h"
+#include "./macro.h"
+#include "./maths.h"
 #include "./spainlock.hpp"
-#define PI 3.14159265359
-#define EPSILON 1e-5f
-#define EPSILON2 1e-5f
-
-
+#include "../shader/shader.h"
+#include "../platform/win32.h"
 
 const int WINDOW_HEIGHT = 600;
 const int WINDOW_WIDTH = 800;

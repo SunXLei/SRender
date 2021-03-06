@@ -1,10 +1,8 @@
 #pragma once
+#include "../core/macro.h"
 #include "../core/maths.h"
 #include "../core/model.h"
 #include "../core/camera.h"
-
-
-#define MAX_VERTEX 10
 
 struct light
 {
@@ -12,11 +10,13 @@ struct light
 	vec3 intensity;
 };
 
-typedef struct cubemap {
+typedef struct cubemap 
+{
 	TGAImage *faces[6];
 }cubemap_t;
 
-typedef struct iblmap {
+typedef struct iblmap 
+{
 	int mip_levels;
 	cubemap_t *irradiance_map;
 	cubemap_t *prefilter_maps[15];
@@ -25,7 +25,7 @@ typedef struct iblmap {
 
 typedef struct
 {
-	//light_matrix for shadow mapping, to do...
+	//light_matrix for shadow mapping, (to do)
 	mat4 model_matrix;
 	mat4 camera_view_matrix;
 	mat4 light_view_matrix;

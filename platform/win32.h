@@ -1,16 +1,17 @@
 #pragma once
 #include <Windows.h>
+
 #include "../core/maths.h"
 
 typedef struct mouse
 {
-	//orbit
+	// for camera orbit
 	vec2 orbit_pos;
 	vec2 orbit_delta;
-	//first-person view (diabled now)
+	// for first-person view (diabled now)
 	vec2 fv_pos;
 	vec2 fv_delta;
-	//wheel
+	// for mouse wheel
 	float wheel_delta;
 }mouse_t;
 

@@ -1,5 +1,6 @@
 #include "./camera.h"
-#include "../win32/win32.h"
+
+#include "../platform/win32.h"
 
 Camera::Camera(vec3 e, vec3 t, vec3 up, float aspect):
 	eye(e),target(t),up(up),aspect(aspect)
@@ -10,33 +11,34 @@ Camera::~Camera()
 
 void updata_camera_pos(Camera &camera)
 {
-	vec3 from_target = camera.eye - camera.target;
-	float factor = 1.5 * PI;
+	vec3 from_target = camera.eye - camera.target;			// vector point from target to camera's position
 	float radius = from_target.norm();
-	float phi = (float)atan2(from_target[0], from_target[2]); //方位角,返回与z轴的夹角，范围[-pi,pi]
-	float theta = (float)acos(from_target[1] / radius);		  //天顶角
+
+	float phi     = (float)atan2(from_target[0], from_target[2]); // azimuth angle(方位角), angle between from_target and z-axis，[-pi, pi]
+	float theta   = (float)acos(from_target[1] / radius);		  // zenith angle(天顶角), angle between from_target and y-axis, [0, pi]
 	float x_delta = window->mouse_info.orbit_delta[0] / window->width;
 	float y_delta = window->mouse_info.orbit_delta[1] / window->height;
 
-	//for wheel
+	// for mouse wheel
 	radius *= (float)pow(0.95, window->mouse_info.wheel_delta);
 
-	//for left button
-	phi += x_delta * factor;
+	float factor = 1.5 * PI;
+	// for mouse left button
+	phi	  += x_delta * factor;
 	theta += y_delta * factor;
-	if (theta > PI) theta = PI - 1e-3f;
-	if (theta < 0) theta = 1e-3f;
+	if (theta > PI) theta = PI - EPSILON * 100;
+	if (theta < 0)  theta = EPSILON * 100;
 
 	camera.eye[0] = camera.target[0] + radius * sin(phi) * sin(theta);
 	camera.eye[1] = camera.target[1] + radius * cos(theta);
 	camera.eye[2] = camera.target[2] + radius * sin(theta) * cos(phi);
 
-	//for right button
-	factor = radius * (float)tan(60.0 / 360 * PI) * 2.2;
+	// for mouse right button
+	factor  = radius * (float)tan(60.0 / 360 * PI) * 2.2;
 	x_delta = window->mouse_info.fv_delta[0] / window->width;
 	y_delta = window->mouse_info.fv_delta[1] / window->height;
 	vec3 left = x_delta * factor * camera.x;
-	vec3 up = y_delta * factor * camera.y;
+	vec3 up   = y_delta * factor * camera.y;
 
 	camera.eye += (left - up);
 	camera.target += (left - up);
@@ -92,6 +94,10 @@ void handle_key_events(Camera& camera)
 	{
 		camera.eye += 0.05f*camera.x;
 		camera.target += 0.05f*camera.x;
+	}
+	if (window->keys[VK_ESCAPE])
+	{
+		window->is_close = 1;
 	}
 }
 

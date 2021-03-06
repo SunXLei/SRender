@@ -1,18 +1,18 @@
-#ifndef __MODEL_H__
-#define __MODEL_H__
-#include <vector>
+#pragma once
 #include <string>
-#include "./tgaimage.h"
-#include "maths.h"
+#include <vector>
 
-typedef struct cubemap cubemap_t;
+#include "./maths.h"
+#include "./tgaimage.h"
+
+typedef struct cubemap cubemap_t; // forward declaration
 
 class Model {
 private:
-	std::vector<vec3> verts_;
-	std::vector<std::vector<int> > faces_; // attention, this Vec3i means vertex/uv/normal
-	std::vector<vec3> norms_;
-	std::vector<vec2> uv_;
+	std::vector<vec3> verts;
+	std::vector<std::vector<int> > faces; // attention, this Vec3i means vertex/uv/normal
+	std::vector<vec3> norms;
+	std::vector<vec2> uvs;
 
 
 	void load_cubemap(const char *filename);
@@ -28,11 +28,11 @@ public:
 
 	//map
 	int is_from_mmd;
-	TGAImage *diffusemap_;
-	TGAImage *normalmap_;
-	TGAImage *specularmap_;
-	TGAImage *roughnessmap_;
-	TGAImage *metalnessmap_;
+	TGAImage *diffusemap;
+	TGAImage *normalmap;
+	TGAImage *specularmap;
+	TGAImage *roughnessmap;
+	TGAImage *metalnessmap;
 	TGAImage *occlusion_map;
 	TGAImage *emision_map;
 
@@ -51,12 +51,5 @@ public:
 	float occlusion(vec2 uv);
 	float specular(vec2 uv);
 
-	//vec3 right_sample(vec2 uv);
-	//vec3 left_sample(vec2 uv);
-	//vec3 top_sample(vec2 uv);
-	//vec3 bottom_sample(vec2 uv);
-	//vec3 front_sample(vec2 uv);
-	//vec3 back_sample(vec2 uv);
 	std::vector<int> face(int idx);
 };
-#endif //__MODEL_H__

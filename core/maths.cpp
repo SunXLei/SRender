@@ -1,4 +1,4 @@
-#include "maths.h"
+#include "./maths.h"
 
 /* vec2 class member functions */
 vec2::vec2() : e{ 0,0 } {}
@@ -139,6 +139,7 @@ vec4& vec4::operator*=(const float t) { e[0] *= t; e[1] *= t; e[2] *= t; e[3] *=
 vec4& vec4::operator/=(const float t) { return *this *= 1 / t; }
 
 /* vec4 related functions */
+
 vec4 to_vec4(const vec3 &u, float w)
 {
 	return vec4(u[0], u[1], u[2], w);
@@ -243,7 +244,6 @@ mat3 mat3::inverse() const
 	return ((*this).inverse_transpose()).transpose();
 }
 
-/* mat3 related functions */
 std::ostream& operator<<(std::ostream &out, const mat3 &m)
 {
 	return out << m[0] << "\n" << m[1] << "\n" << m[2];
@@ -337,7 +337,6 @@ mat4 mat4::inverse() const
 	return ((*this).inverse_transpose()).transpose();
 }
 
-/* mat4 related functions */
 std::ostream& operator<<(std::ostream &out, const mat4 &m)
 {
 	return out << m[0] << "\n" << m[1] << "\n" << m[2] << "\n" << m[3];

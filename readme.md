@@ -21,6 +21,7 @@ The number of core codes is about 2000 lines, so it's easy for studying or readi
 * Blinn-Phong shading
 * Perspective correct interpolation
 * Back-face culling
+* early-z
 * Homogeneous clipping
 * Cubemap skybox
 * Physically based rendering (PBR)

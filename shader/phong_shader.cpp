@@ -1,6 +1,7 @@
 #include "./shader.h"
 #include "../core/sample.h"
-
+//reference
+//https://learnopengl.com/Advanced-Lighting/Normal-Mapping
 static vec3 cal_normal(vec3 &normal, vec3 *world_coords,const vec2 *uvs,const vec2 &uv, TGAImage *normal_map)
 {
 //here can be done after clipping and interpolate

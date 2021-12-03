@@ -15,7 +15,7 @@ public:
 	float operator[](int i) const;
 
 	vec2 operator-() const;
-	vec2& operator+=(const vec2 &v);
+	vec2& operator+=(const vec2& v);
 	vec2& operator*=(const float t);
 	vec2& operator/=(const float t);
 
@@ -36,9 +36,9 @@ public:
 	float z() const;
 	float& operator[](int i);
 	float operator[](int i) const;
-	
+
 	vec3 operator-() const;
-	vec3& operator+=(const vec3 &v);
+	vec3& operator+=(const vec3& v);
 	vec3& operator*=(const float t);
 	vec3& operator/=(const float t);
 
@@ -101,40 +101,40 @@ public:
 };
 
 /* vec2 related functions */
-std::ostream& operator<<(std::ostream &out, const vec2 &v);
-vec2 operator+(const vec2 &u, const vec2 &v);
-vec2 operator-(const vec2 &u, const vec2 &v);
-vec2 operator*(const vec2 &u, const vec2 &v);
-vec2 operator*(double t, const vec2 &v);
-vec2 operator*(const vec2 &v, double t);
+std::ostream& operator<<(std::ostream& out, const vec2& v);
+vec2 operator+(const vec2& u, const vec2& v);
+vec2 operator-(const vec2& u, const vec2& v);
+vec2 operator*(const vec2& u, const vec2& v);
+vec2 operator*(double t, const vec2& v);
+vec2 operator*(const vec2& v, double t);
 vec2 operator/(vec2 v, double t);
 
 /* vec3 related functions */
-std::ostream& operator<<(std::ostream &out, const vec3 &v);
-vec3 operator+(const vec3 &u, const vec3 &v);
-vec3 operator-(const vec3 &u, const vec3 &v);
-vec3 operator*(const vec3 &u, const vec3 &v);
-vec3 operator*(double t, const vec3 &v);
-vec3 operator*(const vec3 &v, double t);
+std::ostream& operator<<(std::ostream& out, const vec3& v);
+vec3 operator+(const vec3& u, const vec3& v);
+vec3 operator-(const vec3& u, const vec3& v);
+vec3 operator*(const vec3& u, const vec3& v);
+vec3 operator*(double t, const vec3& v);
+vec3 operator*(const vec3& v, double t);
 vec3 operator/(vec3 v, double t);
-double dot(const vec3 &u, const vec3 &v);
-vec3 cross(const vec3 &u, const vec3 &v);
-vec3 unit_vector(const vec3 &v);
+double dot(const vec3& u, const vec3& v);
+vec3 cross(const vec3& u, const vec3& v);
+vec3 unit_vector(const vec3& v);
 vec3 cwise_product(const vec3& a, const vec3& b);
 
 /* vec4 related functions */
-std::ostream& operator<<(std::ostream &out, const vec4 &v);
-vec4 to_vec4(const vec3 &u, float w);
-vec4 operator-(const vec4 &u, const vec4 &v);
-vec4 operator+(const vec4 &u, const vec4 &v);
-vec4 operator*(double t, const vec4 &v);
-vec4 operator*(const vec4 &v, double t);
+std::ostream& operator<<(std::ostream& out, const vec4& v);
+vec4 to_vec4(const vec3& u, float w);
+vec4 operator-(const vec4& u, const vec4& v);
+vec4 operator+(const vec4& u, const vec4& v);
+vec4 operator*(double t, const vec4& v);
+vec4 operator*(const vec4& v, double t);
 
 /* mat related functions */
-std::ostream& operator<<(std::ostream &out, const mat3 &m);
-std::ostream& operator<<(std::ostream &out, const mat4 &m);
-vec4 operator*(const mat4 &m, const vec4 v);
-mat4 operator*(const mat4 &m1, const mat4 &m2);
+std::ostream& operator<<(std::ostream& out, const mat3& m);
+std::ostream& operator<<(std::ostream& out, const mat4& m);
+vec4 operator*(const mat4& m, const vec4 v);
+mat4 operator*(const mat4& m1, const mat4& m2);
 
 /* transformation related functions */
 mat4 mat4_translate(float tx, float ty, float tz);

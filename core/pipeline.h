@@ -5,10 +5,12 @@
 #include "../shader/shader.h"
 #include "../platform/win32.h"
 
-const int WINDOW_HEIGHT = 600;
-const int WINDOW_WIDTH = 800;
+const int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 
-//rasterize triangle
-void rasterize_singlethread(vec4 *clipcoord_attri, unsigned char* framebuffer, float *zbuffer, IShader& shader);
-void rasterize_multithread(vec4 *clipcoord_attri, unsigned char* framebuffer, float *zbuffer, IShader& shader);
-void draw_triangles(unsigned char* framebuffer, float *zbuffer,IShader& shader,int nface);
+//rasterizer assembled triangle, interpolate
+void rasterize_singlethread(vec4* clipcoord_attri, unsigned char* framebuffer, float* zbuffer, IShader& shader);
+
+//notice this is for each model face
+void draw_triangles(unsigned char* framebuffer, float* zbuffer, IShader& shader, int nface);
+
+//void draw_triangles(unsigned char* framebuffer, float* zbuffer, IShader& shader, int nface);

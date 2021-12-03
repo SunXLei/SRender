@@ -1,8 +1,11 @@
 #include "./shader.h"
 #include "../core/sample.h"
-
+//reference
+//https://learnopengl.com/Advanced-Lighting/Normal-Mapping
 static vec3 cal_normal(vec3 &normal, vec3 *world_coords,const vec2 *uvs,const vec2 &uv, TGAImage *normal_map)
 {
+//here can be done after clipping and interpolate
+#pragma region cal_tbn
 	// calculate the difference in UV coordinate
 	float x1 = uvs[1][0] - uvs[0][0];
 	float y1 = uvs[1][1] - uvs[0][1];
@@ -18,12 +21,13 @@ static vec3 cal_normal(vec3 &normal, vec3 *world_coords,const vec2 *uvs,const ve
 	vec3 b = e1 * (-x2) + e2 * x1;
 	t /= det;
 	b /= det;
-
 	// schmidt orthogonalization
 	normal = unit_vector(normal);
-	t = unit_vector(t - dot(t, normal)*normal);
-	b = unit_vector(b - dot(b, normal)*normal - dot(b, t)*t);
+	t = unit_vector(t - dot(t, normal) * normal);
+	b = unit_vector(b - dot(b, normal) * normal - dot(b, t) * t);
+#pragma endregion
 
+	//perturb normal through normal map
 	vec3 sample = texture_sample(uv, normal_map);
 	// modify the range from 0 ~ 1 to -1 ~ +1
 	sample = vec3(sample[0] * 2 - 1, sample[1] * 2 - 1, sample[2] * 2 - 1);
@@ -54,19 +58,14 @@ void PhongShader::vertex_shader(int nfaces, int nvertex)
 
 vec3 PhongShader::fragment_shader(float alpha, float beta, float gamma)
 {
-	vec4 *clip_coords = payload.clipcoord_attri;
 	vec3 *world_coords = payload.worldcoord_attri;
 	vec3 *normals = payload.normal_attri;
 	vec2 *uvs = payload.uv_attri;
 
 	// interpolate attribute
-	float Z = 1.0 / (alpha / clip_coords[0].w() + beta / clip_coords[1].w() + gamma / clip_coords[2].w());
-	vec3 normal = (alpha*normals[0] / clip_coords[0].w() + beta * normals[1] / clip_coords[1].w() +
-		gamma * normals[2] / clip_coords[2].w()) * Z;
-	vec2 uv = (alpha*uvs[0] / clip_coords[0].w() + beta * uvs[1] / clip_coords[1].w() +
-		gamma * uvs[2] / clip_coords[2].w()) * Z;
-	vec3 worldpos = (alpha*world_coords[0] / clip_coords[0].w() + beta * world_coords[1] / clip_coords[1].w() +
-		gamma * world_coords[2] / clip_coords[2].w()) * Z;
+	vec3 normal = alpha*normals[0] + beta * normals[1] + gamma * normals[2];
+	vec2 uv = alpha*uvs[0]+ beta * uvs[1] + gamma * uvs[2];
+	vec3 worldpos = alpha*world_coords[0] + beta * world_coords[1] + gamma * world_coords[2];
 
 	if (payload.model->normalmap)
 		normal = cal_normal(normal, world_coords, uvs, uv, payload.model->normalmap);

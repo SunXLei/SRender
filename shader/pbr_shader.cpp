@@ -138,19 +138,14 @@ vec3 PBRShader::direct_fragment_shader(float alpha, float beta, float gamma)
 	vec3 radiance = vec3(3,3,3);
 
 	//for reading easily
-	vec4 *clip_coords = payload.clipcoord_attri;
 	vec3 *world_coords = payload.worldcoord_attri;
 	vec3 *normals = payload.normal_attri;
 	vec2 *uvs = payload.uv_attri;
 
 	//interpolate attribute
-	float Z = 1.0 / (alpha / clip_coords[0].w() + beta / clip_coords[1].w() + gamma / clip_coords[2].w());
-	vec3 normal = (alpha*normals[0] / clip_coords[0].w() + beta * normals[1] / clip_coords[1].w() +
-		gamma * normals[2] / clip_coords[2].w()) * Z;
-	vec2 uv = (alpha*uvs[0] / clip_coords[0].w() + beta * uvs[1] / clip_coords[1].w() +
-		gamma * uvs[2] / clip_coords[2].w()) * Z;
-	vec3 worldpos = (alpha*world_coords[0] / clip_coords[0].w() + beta * world_coords[1] / clip_coords[1].w() +
-		gamma * world_coords[2] / clip_coords[2].w()) * Z;
+	vec3 normal = alpha * normals[0] + beta * normals[1] + gamma * normals[2];
+	vec2 uv = alpha * uvs[0] + beta * uvs[1] + gamma * uvs[2];
+	vec3 worldpos = alpha * world_coords[0] + beta * world_coords[1] + gamma * world_coords[2];
 
 	vec3 l = unit_vector(light_pos - worldpos);
 	vec3 n = unit_vector(normal);
@@ -210,19 +205,14 @@ vec3 PBRShader::fragment_shader(float alpha, float beta, float gamma)
 	vec3 radiance = vec3(3, 3, 3);
 
 	//for reading easily
-	vec4 *clip_coords = payload.clipcoord_attri;
 	vec3 *world_coords = payload.worldcoord_attri;
 	vec3 *normals = payload.normal_attri;
 	vec2 *uvs = payload.uv_attri;
 
 	//interpolate attribute
-	float Z = 1.0 / (alpha / clip_coords[0].w() + beta / clip_coords[1].w() + gamma / clip_coords[2].w());
-	vec3 normal = (alpha*normals[0] / clip_coords[0].w() + beta * normals[1] / clip_coords[1].w() +
-		gamma * normals[2] / clip_coords[2].w()) * Z;
-	vec2 uv = (alpha*uvs[0] / clip_coords[0].w() + beta * uvs[1] / clip_coords[1].w() +
-		gamma * uvs[2] / clip_coords[2].w()) * Z;
-	vec3 worldpos = (alpha*world_coords[0] / clip_coords[0].w() + beta * world_coords[1] / clip_coords[1].w() +
-		gamma * world_coords[2] / clip_coords[2].w()) * Z;
+	vec3 normal = alpha * normals[0] + beta * normals[1] + gamma * normals[2];
+	vec2 uv = alpha * uvs[0] + beta * uvs[1] + gamma * uvs[2];
+	vec3 worldpos = alpha * world_coords[0] + beta * world_coords[1] + gamma * world_coords[2];
 
 
 	if (payload.model->normalmap)

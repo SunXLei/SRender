@@ -120,7 +120,7 @@ vec3 unit_vector(const vec3 &v)
 	return v / v.norm();
 }
 
-vec3 cwise_product(const vec3& a, const vec3& b)
+vec3 cwise_product(const vec3& a, const vec3& b) //the same as operator*
 {
 	return vec3(a[0] * b[0], a[1] * b[1], a[2] * b[2]);
 }
@@ -188,7 +188,8 @@ static float mat3_determinant(const mat3 &m)
 	return a + b + c;
 }
 
-static mat3 mat3_adjoint(const mat3 &m)
+//static means just in this file
+static mat3 mat3_adjoint(const mat3 &m) //notice this is not adjoint matrix but adjoint transpose
 {
 	mat3 adjoint;
 	adjoint[0][0] = +(m[1][1] * m[2][2] - m[2][1] * m[1][2]);
@@ -282,7 +283,7 @@ static float mat4_cofactor(mat4 m, int r, int c)
 	return sign * minor;
 }
 
-static mat4 mat4_adjoint(mat4 m)
+static mat4 mat4_adjoint(mat4 m) // adjoint transpose
 {
 	mat4 adjoint;
 	int i, j;
@@ -319,7 +320,7 @@ mat4 mat4::inverse_transpose() const
 
 	adjoint = mat4_adjoint(*this);
 	determinant = 0;
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < 4; i++) //determinant value = transposed determinant value
 	{
 		determinant += rows[0][i] * adjoint[0][i];
 	}
@@ -361,9 +362,9 @@ mat4 operator*(const mat4 &m1, const mat4 &m2)
 {
 	mat4 m;
 	int i, j, k;
-	for (i = 0; i < 4; i++) 
-		for (j = 0; j < 4; j++) 
-			for (k = 0; k < 4; k++) 
+	for (i = 0; i < 4; i++) //left matrix row
+		for (j = 0; j < 4; j++) //right matrix column
+			for (k = 0; k < 4; k++) // left matirx ith row kth column
 				m[i][j] += m1[i][k] * m2[k][j];
 	return m;
 }
@@ -473,11 +474,11 @@ mat4 mat4_lookat(vec3 eye, vec3 target, vec3 up)
 {
 	mat4 m = mat4::identity();
 
-	vec3 z = unit_vector(eye - target);
+	vec3 z = unit_vector(eye - target); //never look up or down
 	vec3 x = unit_vector(cross(up, z));
 	vec3 y = unit_vector(cross(z, x));
 
-	m[0][0] = x[0];
+	m[0][0] = x[0]; // set row vec3, remember here is R.transpose
 	m[0][1] = x[1];
 	m[0][2] = x[2];
 
@@ -544,8 +545,20 @@ mat4 mat4_ortho(float left, float right, float bottom, float top,
  *
  * see http://www.songho.ca/opengl/gl_projectionmatrix.html
  *
- * note: my implementation is based on right-handed system, so it is a little different
+ * note: my implementation is based on right-handed system
+ * according to Games101
  */
+ /*
+  *  1/(aspect*tan(fovy/2))              0             0           0
+  *                      0  1/tan(fovy/2)             0           0
+  *                      0              0  -(f+n)/(f-n)  2fn/(f-n)
+  *                      0              0            1           0
+  */
+
+// notice, in this way
+//far which is negative matches -1 while near mathes 1 in ndc 
+// z = (near + far)/(near - far)*z - 2*near*far/(near -far)
+// w = z
 mat4 mat4_perspective(float fovy, float aspect, float near, float far)
 {
 	mat4 m = mat4::identity();
@@ -557,7 +570,7 @@ mat4 mat4_perspective(float fovy, float aspect, float near, float far)
 	m[1][1] = near / t;
 	m[2][2] = (near+far)/(near-far);
 	m[2][3] = 2*near*far / (far-near);
-	m[3][2] = 1;
+	m[3][2] = 1;  
 	m[3][3] = 0;
 	return m;
 }

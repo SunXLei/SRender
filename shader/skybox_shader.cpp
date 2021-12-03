@@ -29,13 +29,10 @@ void SkyboxShader::vertex_shader(int nfaces, int nvertex)
 vec3 SkyboxShader::fragment_shader(float alpha, float beta, float gamma)
 {
 	vec3 result_color;
-	vec4 *clip_coords = payload.clipcoord_attri;
 	vec3 *world_coords = payload.worldcoord_attri;
 
 	//interpolate attribute
-	float Z = 1.0 / (alpha / clip_coords[0].w() + beta / clip_coords[1].w() + gamma / clip_coords[2].w());
-	vec3 worldpos = (alpha*world_coords[0] / clip_coords[0].w() + beta * world_coords[1] / clip_coords[1].w() +
-		gamma * world_coords[2] / clip_coords[2].w()) * Z;
+	vec3 worldpos = alpha * world_coords[0] + beta * world_coords[1] + gamma * world_coords[2];
 
 	result_color = cubemap_sampling(worldpos, payload.model->environment_map);
 	return result_color * 255.f;

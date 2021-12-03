@@ -21,6 +21,7 @@ The number of core codes is about 2000 lines, so it's easy for studying or readi
 * Blinn-Phong shading
 * Perspective correct interpolation
 * Back-face culling
+* early-z
 * Homogeneous clipping
 * Cubemap skybox
 * Physically based rendering (PBR)
@@ -54,7 +55,7 @@ cmake -G "Visual Studio 15 2017" ..
 
 Another way is directly opening the SRender file with [CLION](https://www.jetbrains.com/clion/), it will automatically configure the project.
 
-
+Notice: use multibyte not unicode! Remember to change your setting for win32 file
 
 ## Control of Camera
 

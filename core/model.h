@@ -10,9 +10,9 @@ typedef struct cubemap cubemap_t; // forward declaration
 class Model {
 private:
 	std::vector<vec3> verts;
-	std::vector<std::vector<int> > faces; // attention, this Vec3i means vertex/uv/normal
-	std::vector<vec3> norms;
 	std::vector<vec2> uvs;
+	std::vector<vec3> norms;
+	std::vector<std::vector<int> > faces; // attention, this Vec3i means vertex/uv/normal
 
 
 	void load_cubemap(const char *filename);

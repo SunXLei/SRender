@@ -39,13 +39,13 @@ typedef struct
 	//vertex attribute
 	vec3 normal_attri[3];
 	vec2 uv_attri[3];
-	vec3 worldcoord_attri[3];
+	vec3 worldcoord_attri[3]; 
 	vec4 clipcoord_attri[3];
 
 	//for homogeneous clipping
 	vec3 in_normal[MAX_VERTEX];
 	vec2 in_uv[MAX_VERTEX];
-	vec3 in_worldcoord[MAX_VERTEX];
+	vec3 in_worldcoord[MAX_VERTEX]; //no need to store world data, but the cost is little
 	vec4 in_clipcoord[MAX_VERTEX];
 	vec3 out_normal[MAX_VERTEX];
 	vec2 out_uv[MAX_VERTEX];
